@@ -1,0 +1,60 @@
+{% extends 'layout_afterlogin.html' %}
+{% block head %}
+  <style>
+  </style>
+{% endblock %}
+{% block title %}
+  <title>profile</title>
+{% endblock %}
+{% block body%}
+  <div class="container">
+    <div class="card w-50 mx-auto">
+      <div class="card-header">
+        <div class="row">
+          <div class="col-lg-8 col-sm-8">
+            <h3>Edit my profile</h3>
+          </div>
+          <div class="col-lg-4 col-sm-4">
+            <a href="/user_profile/{{session['id']}}" class="btn btn-outline-success float-right">View profile</a>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-lg-3 col-sm-3 text-right">User ID :</div>
+          <div class="col-lg-9 col-sm-9">{{ user.id }}</div>  
+        </div>
+        <div class="row mt-1">
+          <div class="col-lg-3 col-sm-3 text-right">User name :</div>
+          <div class="col-lg-9 col-sm-9">{{user.name}}
+            <a href="/update" class="btn btn-warning text-white float-right">Edit user name</a>
+          </div>  
+        </div>
+        <div class="row mt-1">
+          <div class="col-lg-3 col-sm-3 text-right">Avatar :</div>
+          <div class="col-lg-9 col-sm-9">
+            {% if profile.avatar %}
+              <img src="static/images/{{profile.avatar}}" alt="" width="200px">
+            {% endif %}
+              <form action="/profile" method="post" enctype="multipart/form-data">
+                <input type="file" name="avatar" id=""  class="form-control mt-1" placeholder="{{profile.avatar}}">
+          </div>  
+        </div>
+        <div class="row mt-1">
+          <div class="col-lg-3 col-sm-3 text-right">Bio :</div>
+          <div class="col-lg-9 col-sm-9">
+                <input type="text" name="bio" id="" value="{{profile.bio}}" class="form-control">
+          </div>  
+        </div>
+                <input type="submit" value="Update" class="btn btn-success btn-block mt-2">
+              </form>
+      
+      </div>
+      <!-- /card-body -->
+    </div>
+    <!-- /card -->
+    
+
+  </div>
+  <!-- /container -->
+{% endblock %}

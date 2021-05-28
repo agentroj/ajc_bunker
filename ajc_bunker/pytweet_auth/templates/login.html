@@ -1,0 +1,36 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+ <title>LogIn</title>
+{% endblock %}
+
+{% block head %}
+<style>
+  .container{
+    padding: 50px;
+    background-color: rgba(230,247,245,0.7)
+  }
+</style>
+{% endblock %}
+
+{% block body %}
+ <div class="container w-50 mx-auto mt-5">
+   <h1 class="text-success">LogIn</h1>
+   <div id="form" class=:mx-auto>
+    <form action="/login" method="post">
+     <input type="text" name="login_name" placeholder="Login name" class="form-control"><br>
+     <input type="text" name="password" placeholder="Password" class="form-control"><br>
+     <input type="submit" value="LOGIN" class="btn btn-success mt-4 mb-5 form-control">
+     <br>
+    </form>
+   </div>
+   <div class="mx-auto text-center mt-2"> 
+     <p>No accout yet? Please sogn up first.</p>
+     <a href="/signup" class="btn btn-outline-primary w-50">Sign Up</a>
+   </div>
+  </div> 
+   <div class="w50 mx-auto text-center mt-2">
+     <a href="/" class="btn btn-outline-success">Back</a>
+   </div>
+{% endblock %}
+

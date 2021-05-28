@@ -1,0 +1,7 @@
+DB_HOST=docker_mysql        
+MYSQL_ROOT_PASSWORD=test
+MYSQL_DATABASE=docker_pytweet         
+MYSQL_USER=test             
+MYSQL_PASSWORD=test  
+IMGUR_CLI_ID=ae33b32e0e1cb3b
+IMGUR_CLI_SECRET=fb82067fd8904ed47d69b44d5e0bfbce04931d60       

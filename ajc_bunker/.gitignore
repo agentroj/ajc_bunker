@@ -1,0 +1,18 @@
+# 環境変数
+.env
+
+# PyCharm
+.idea
+
+# 環境ディレクトリ
+venv
+
+# PyCharm特有
+/**/__pycache__
+
+
+# docker data volumes
+/docker/db/data/*
+
+# この回はmigrationsはいれない
+migrations

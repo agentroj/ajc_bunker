@@ -1,0 +1,22 @@
+{
+	"folders": [
+		{
+			"name": "Kredo",
+			"path": "../../../../../Kredo"
+		},
+		{
+			"name": "Flask",
+			"path": "../../../../Flask"
+		},
+		{
+			"name": "Exercise1",
+			"path": "../../../../Exercise1"
+		},
+		{
+			"path": "../../../../flask_sample"
+		},
+		{
+			"path": ".."
+		}
+	]
+}

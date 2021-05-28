@@ -1,0 +1,68 @@
+{% extends 'layout_afterlogin.html' %}
+
+{% block title%}
+<title> Search </title>
+{% endblock %}
+
+{% block head%}
+<style>
+  #avatar{
+      height: 100px;
+      width: 100px;
+      border-radius: 50%;
+      border: 1px solid lightgray;
+      object-fit: : contain;
+      -ms-inerpolation-mode: bicubic;
+  }
+  #result{
+     border: 1px solid lightgray;
+     border-radius: 20px;
+     background-color: white;
+  }
+  
+</style>
+{% endblock %}
+
+{% block body%}
+<div class="container w-50">
+   <div class="">
+     <h3>Search Your Friends</h3>
+     <form action="/search" method="post">
+      <input type="text" name="keyword" placeholder="Enter Name" class="form-control">
+      <input type="submit" value="Sarch" class="btn btn-success mt-2">
+    </form>
+   </div>
+<hr>
+
+<div class="show-result mt-5">               
+  {% if results|length < 1 %}            
+  <div class="card">                
+    <div class="card-body">                    
+      <b class="text-warning">No result</b>                </div>            
+    </div>        
+    {% else %}            
+    {% for result in results %}                
+    <div class="mt-2">                    
+      <div class="row" id="result">                        <div class="col-lg-3 col-sm-3 text-center">                            
+        <a href="user_profile/{{result.id}}">                                
+          {% if result.profile.avatar %}                                
+          <img src="static/images/{{result.profile.avatar}}" alt="profile_avatar" id="avatar" class="img-thumbnail w-75 mx-auto">                                
+          {% else %}
+          <img src="../static/assets/img/blank-profile-picture.png" alt="profile_avatar" id="avatar" class="img-thumbnail w-75 mx-auto">                                
+          {% endif %}                            
+        </a>                         
+      </div>                        
+      <div class="col-lg-8 col-sm-8">                            
+        <a href="user_profile/{{result.id}}" class="text-dark">                                <h4> {{ result.name }} </h4>                            
+        </a>                        
+      </div>                    
+    </div>                    
+    <!-- /row -->                
+  </div>            
+  {% endfor %}        
+  {% endif %}    
+</div>
+</div>
+{% endblock %}
+</div>
+{% endblock %}

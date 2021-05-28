@@ -1,0 +1,14 @@
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
+
+db = SQLAlchemy()
+
+
+# EXERCISE: DBの初期化の実装 =======================
+# EXERCISE: Let's implement DB initializer =======
+def init_db(app):
+    db.init_app(app)
+    Migrate(app, db)
+    return db
+# ================================================
+

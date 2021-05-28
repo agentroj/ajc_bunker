@@ -1,0 +1,51 @@
+{% extends 'layout_afterlogin.html' %}
+
+{% block head %}
+ <style>
+   #tweet_avatar{
+     height: 100px;
+     width: 100px;
+     border-radius: 50%;
+     object-fit: contain;
+     -ms-interpolation-mode: bicubic;
+   }
+ </style>
+{% endblock %}
+
+{% block title %}
+<title>Edit Tweet</title>
+{% endblock %}
+
+{% block body %}
+<div class="container" id="container">    
+  <div class="card w-75 mx-auto">         
+    <div class="card-header">        
+      <h3>Edit tweet        
+        <a href="/delete_tweet/{{tweet.id}}" class="btn btn-danger float-right">Delete</a>        
+      </h3>      
+    </div>       <!-- tweet body -->      
+    <div class="card-body">         
+      <div class="row">          <!-- 投稿者 -->          
+        <div class="col-lg-2">            
+          <div class="row mt-1 text-center">                
+            {% if profile.avatar %}                    
+            <img src="/static/images/{{profile.avatar}}" alt="profile_avatar" id="tweet_avatar" class="img-thumbnail w-75 mx-auto">                
+            {% else %}                    
+            <img src="../static/assets/img/blank-profile-picture.png" alt="profile_avatar" id="tweet_avatar" class="img-thumbnail w-75 mx-auto">                
+            {% endif %}            
+          </div>            
+          <div class="text-center">                <!-- user name -->                
+            <p class="">{{ user.name  }}</p>            
+          </div>
+          <div class="w-75 mx-auto">      
+            <div class="row">        
+              <div class="col-lg-2">
+
+              </div>        
+              <div class="col-lg-10 text-center">          
+                <a href="/dashboard"class="btn btn-outline-dark mt-2">back</a>        
+              </div>      
+            </div>    
+          </div>
+        </div>
+{% endblock %}

@@ -1,0 +1,242 @@
+{% extends 'layout_afterlogin.html' %}
+{% block title %}
+  <title>Profile</title>
+{% endblock %}
+{% block head %}
+    <style>
+         #tweet_avatar{
+            height: 100px;
+            width: auto;
+            border-radius: 50%;
+            border: 1px solid lightgray;
+            object-fit: contain;
+            -ms-interpolation-mode: bicubic;
+        }
+        #reply_avatar{
+            height: 70px;
+            width: auto;
+            border-radius: 50%;
+            border: 1px solid lightgray;
+            object-fit: contain;
+        }
+        #reply_content{
+            border: 1px solid lightgray;
+            background-color: white;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            border-bottom-right-radius: 20px;
+        }
+        .good-btn:hover{
+            color : lightblue;
+            font-size : 1.1em;
+            cursor : pointer;
+        }
+        .good-btn-active,.good-active{
+            color : blue;
+            font-size: 1.1em;
+        }
+        .retweet_btn_active{
+            color :green;
+            font-size: 1.1em;
+        }
+    </style>
+{% endblock %}
+{% block body %}
+    <div class="container mb-5">
+        <div class="card w-50 mx-auto mt-5">
+            <div class="card-header">
+                <!-- user_id : {{user_profile.user_id}}  <br>
+                followed_list:{{followed_list}} <br>
+                login_id : {{session['id']}} -->
+
+                {% if user.id != session['id'] %}
+                    <!-- #### follow / unfollow btn #### -->
+                    {% if  user_profile.user_id in followed_list  %}
+                        <!-- unfollow -->
+                        <form action="/user_profile/{{user_profile.user_id}}/follow" method="get">
+                            <button type="submit"  class="float-right btn btn-warning text-white">Unfollow </button>
+                        </form>
+                    {% else %}
+                        <!-- follow -->
+                        <form action="/user_profile/{{user_profile.user_id}}/follow" method="get">
+                            <button type="submit"  class="float-right btn btn-success text-white">Follow </button>
+                        </form>
+                    {% endif %}
+                {% else %}
+                    <a href="/profile" class="btn btn-primary float-right">Edit profile</a>
+                {% endif %}
+                    <!-- ### other user's profile(not login user) ### -->
+                    <h3>{{user.name}}'s profile</h3>   
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-6 col-sm-6">
+                        {% if user_profile.avatar %}
+                            <img src="../static/images/{{user_profile.avatar}}" alt="profile_avatar" width="100%">
+                        {% else %}
+                            <img src="../static/assets/img/blank-profile-picture.png" alt="profile_avatar" width="100%">
+                        {% endif %}
+                    </div>
+                    <div class="col-lg-6 col-sm-6">
+                        Name: <b>{{ user.name }} </b><br>
+                        <br>
+                        Bio : <b> {{ user_profile.bio }} </b>
+                        <br>
+                    </div>
+                </div> 
+            </div>
+        </div>
+        <!-- /card -->
+
+        <!-- #### tweet of this user #### -->
+        {% if tweets |length < 1 %}
+            <div class="card w-50 mx-auto mt-3">
+                <div class="card-body">
+                    <h3>No tweet yet </h3>
+                </div>
+            </div>
+        {% else %}
+            <!-- ####tweet表示 #### -->
+            
+            {% for tweet in tweets %}
+            
+
+            <div class="card mt-3 w-75 mx-auto">    
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-2 col-sm-2">
+                            <div class="row mt-1 text-center">
+                                <!-- tweet user avatar -->
+                                <a href="/user_profile/{{tweet.user_id}}">
+                                    {% if tweet.user.profile.avatar %}
+                                    <img src="../static/images/{{tweet.user.profile.avatar}}" alt="profile_avatar" id="tweet_avatar" class="img-thumbnail w-75 mx-auto">
+                                    {% else %}
+                                    <img src="../static/assets/img/blank-profile-picture.png" alt="profile_avatar" id="tweet_avatar" class="img-thumbnail w-75 mx-auto">
+                                    {% endif %}
+                                </a>
+                            </div>
+                            <div class="text-center">
+                                <!-- tweet user name -->
+                                <b>{{ tweet.user.name  }}</b>
+                            </div>
+                    
+                        </div>
+                        <div class="col-lg-8 col-sm-8 ">
+                            <!-- tweet 一覧 -->
+                            {{ tweet.word }} 
+                            <br>
+                            {% if tweet.photo %}
+                                <img src="/static/images/{{tweet.photo}}" alt="" class="img-thumbnail" style="height: 300px;">
+                            {% endif %}
+                        
+                        </div>
+                        <div class="col-lg-2 col-sm-2">
+                            {% if session['id'] == tweet.user_id %}
+                                <div class="row">
+                                    <a href="/edit_tweet/{{tweet.id}}" class="btn btn-outline-primary w-75">Edit</a>
+                                </div>
+                                <div class="row mt-1">
+                                    <a href="/delete_tweet/{{tweet.id}}" class="btn btn-outline-danger w-75">Delete</a>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>            
+                </div>
+                <!-- リアクション -->
+                <div id="accordion" role="tablist">
+                    <div class="card-footer" role="tab" id="headingOne_{{tweet.id}}">
+                        <div class="row" >
+                            <!-- コメント欄 開くボタン -->
+                            <div class="col-lg-3 col-sm-3" >
+                                <a class="collapsed text-dark btn" data-toggle="collapse" href="#collapseOne_{{tweet.id}}" aria-expanded="false" aria-controls="collapseOne_{{tweet.id}}">
+                                    <i class="far fa-comment"></i>Comment
+                                </a>
+                            </div>
+                            <!-- goodボタン -->
+                            <div class="col-lg-3 col-sm-3">
+                                {% if tweet.id in gooded_list %}
+                                    <form action="/tweet/{{tweet.id}}/good_" method="get">
+                                        <button type="submit" name="good" class="btn" ><i class="far fa-thumbs-up good-btn-active"></i><span class="good-active">good</span></button>
+                                    </form>
+                                {% else %}
+                                    <form action="/tweet/{{tweet.id}}/good" method="get">
+                                        <button type="submit" name="good" class="btn" ><i class="far fa-thumbs-up good-btn"></i>good</button>
+                                    </form>
+                                {% endif %}
+                            </div>
+                            
+                            <!--retweet btn  -->
+                            <div class="col-lg-3 col-sm-3">
+                                <button type="submit" name="retweet" class="btn "><i class="fas fa-retweet retweet_btn "></i>retweet </button>
+                            </div>
+                            <!-- share btn -->
+                            <div class="col-lg-3 col-sm-3">
+                                <button type="submit" name="share" class="btn"><i class="far fa-share-square"></i>share</button>
+                            </div>
+                        </div>
+                        
+                        
+
+                        <!-- reply　コード-->
+                        <div id="collapseOne_{{tweet.id}}" class="collapse" role="tabpanel" aria-labelledby="headingOne_{{tweet.id}}">
+                            <div class="card-body">
+                                <!-- ##### display reply #### -->
+                                    <!-- {{tweet.id}} -->
+                                    
+                                {% for reply in　replys %}                                                                
+                                    {% if tweet.id == reply.tweet_id %}                                        
+                                        <div class="row mt-1">
+                                            <div class="col-lg-2 col-sm-2 text-right ">
+                                                <a href="/user_profile/{{reply.user_id}}">
+                                                    {% if reply.user.profile.avatar %}
+                                                    <img src="../static/images/{{reply.user.profile.avatar}}" alt="profile_avatar" id="reply_avatar" class="img-thumbnail w-75 mx-auto">
+                                                    {% else %}
+                                                    <img src="../static/assets/img/blank-profile-picture.png" alt="profile_avatar" id="reply_avatar" class="img-thumbnail w-75 mx-auto">
+                                                    {% endif %}
+                                                </a>
+                                            </div>
+                                            <div class="col-lg-9 col-sm-9" id="reply_content">
+                                                <b>{{ reply.user.name }}</b>
+                                                <br>
+                                                {{ reply.comment }}                                                
+                                            </div>
+                                            <div class="col-lg-1 col-sm-1">
+                                                {% if session['id'] == reply.user_id %}
+                                                    <a href="/delete_reply/{{reply.id}}" class="btn btn-outline-danger mt-3"><i class="far fa-trash-alt"></i></a>                                                           
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    {% endif %}           
+                                {% endfor %}
+                            
+                                
+                                <!-- ##### reply form #####-->
+                                <form action="/tweets/{{ tweet.id }}/reply_by_profile" method="post">
+                                    <div class="input-group mt-3">  
+                                        <input type="text" name="comment" class="form-control" placeholder="Write a comment" aria-label="" aria-describedby="basic-addon1">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-success" name="reply" type="submit">Reply</button>
+                                        </div>
+                                    </div>    
+                                </form>
+                            </div>
+                        </div> 
+                        <!-- /コメントコード -->
+                    </div>
+                </div>
+            </div>
+            
+            {% endfor %}
+        
+    
+        {% endif %}
+
+
+
+
+    </div>
+
+
+
+
+{% endblock %}
